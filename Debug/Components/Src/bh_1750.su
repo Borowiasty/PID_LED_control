@@ -1,0 +1,2 @@
+../Components/Src/bh_1750.c:8:6:BH1750_Init	32	static
+../Components/Src/bh_1750.c:18:7:BH1750_ReadIlluminance_lux	32	static
