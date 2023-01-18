@@ -29,6 +29,7 @@
 /* USER CODE BEGIN Includes */
 #include <stdio.h>
 #include "bh_1750_config.h"
+#include "arm_math.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -60,19 +61,31 @@ void SystemClock_Config(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 float light=0;//y
+float error=0;//e
+float reference =0;//yr
+float duty=0;//u
+arm_pid_instance_f32 PID;//pid
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
 	  if(htim == &htim3) //Timer probkowania
 	  {
-		  	int pulse=500;
-			if(pulse>1000)
-				pulse=1000;
-			__HAL_TIM_SET_COMPARE(&htim4,TIM_CHANNEL_1,pulse);//ustawienie Duty PWM
-		  //czytanie i wysyl luksow
-		    light = BH1750_ReadIlluminance_lux(&hbh1750_1);
-		    char msg[32] = { 0, };
-		    int msg_len = sprintf(msg, "%d \r\n", (int)light);
-		    HAL_UART_Transmit(&huart3, (uint8_t*)msg, msg_len, 100);
+		    light = BH1750_ReadIlluminance_lux(&hbh1750_1);//odczyt natezenia swiatla
+
+		    error = reference - light;//oblizcenie uchybu
+
+		  	duty = arm_pid_f32(&PID, error);//obliczenie sygnalu z regulatora
+		  	//nasycenie
+			if(duty>1000)
+				duty=1000;
+			if(duty<0)
+				duty=0;
+			//wyslanie wiadomosc
+		    char msg[32]={ 0, };
+		    int msg_len = sprintf(msg, "y=%d,d=%d \r\n", (int)light,(int)duty);
+		    HAL_UART_Transmit(&huart3, (uint8_t*)msg, msg_len, 1000);
+
+			__HAL_TIM_SET_COMPARE(&htim4,TIM_CHANNEL_1,duty);//ustawienie wypelnienia sygnalu PWM
+
 	  }
 }
 /* USER CODE END 0 */
@@ -112,10 +125,16 @@ int main(void)
   MX_TIM3_Init();
   MX_TIM4_Init();
   /* USER CODE BEGIN 2 */
+  BH1750_Init(&hbh1750_1);//czujnik swiatla
+  //inicjacja PID
+  PID.Kp=10;
+  PID.Ki=0;
+  PID.Kd=1;
+  arm_pid_init_f32(&PID, 1);//1-reset state, 0-no change in state
+
   HAL_TIM_Base_Start_IT(&htim3);//probkowanie
   HAL_TIM_Base_Start_IT(&htim4);//pwm
   HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_1);
-  BH1750_Init(&hbh1750_1);//czujnik swiatla
   /* USER CODE END 2 */
 
   /* Infinite loop */

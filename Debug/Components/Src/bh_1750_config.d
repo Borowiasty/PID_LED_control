@@ -1,5 +1,5 @@
 Components/Src/bh_1750_config.o: ../Components/Src/bh_1750_config.c \
- D:/Program\ Files\ (x86)/Programy/STM32CubeIDE_1.10.1/Projekty/ProjektZaliczeniowy/Components/Inc/bh_1750.h \
+ D:/Program\ Files\ (x86)/Programy/Github/PID_LED_control/Components/Inc/bh_1750.h \
  ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal.h \
  ../Core/Inc/stm32f7xx_hal_conf.h \
  ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_rcc.h \
@@ -34,10 +34,10 @@ Components/Src/bh_1750_config.o: ../Components/Src/bh_1750_config.c \
  ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_pcd.h \
  ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_ll_usb.h \
  ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_pcd_ex.h \
- D:/Program\ Files\ (x86)/Programy/STM32CubeIDE_1.10.1/Projekty/ProjektZaliczeniowy/Components/Inc/bh_1750_config.h \
- D:/Program\ Files\ (x86)/Programy/STM32CubeIDE_1.10.1/Projekty/ProjektZaliczeniowy/Components/Inc/bh_1750.h \
+ D:/Program\ Files\ (x86)/Programy/Github/PID_LED_control/Components/Inc/bh_1750_config.h \
+ D:/Program\ Files\ (x86)/Programy/Github/PID_LED_control/Components/Inc/bh_1750.h \
  ../Core/Inc/main.h ../Core/Inc/i2c.h ../Core/Inc/main.h
-D:/Program\ Files\ (x86)/Programy/STM32CubeIDE_1.10.1/Projekty/ProjektZaliczeniowy/Components/Inc/bh_1750.h:
+D:/Program\ Files\ (x86)/Programy/Github/PID_LED_control/Components/Inc/bh_1750.h:
 ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal.h:
 ../Core/Inc/stm32f7xx_hal_conf.h:
 ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_rcc.h:
@@ -72,8 +72,8 @@ D:/Program\ Files\ (x86)/Programy/STM32CubeIDE_1.10.1/Projekty/ProjektZaliczenio
 ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_pcd.h:
 ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_ll_usb.h:
 ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_pcd_ex.h:
-D:/Program\ Files\ (x86)/Programy/STM32CubeIDE_1.10.1/Projekty/ProjektZaliczeniowy/Components/Inc/bh_1750_config.h:
-D:/Program\ Files\ (x86)/Programy/STM32CubeIDE_1.10.1/Projekty/ProjektZaliczeniowy/Components/Inc/bh_1750.h:
+D:/Program\ Files\ (x86)/Programy/Github/PID_LED_control/Components/Inc/bh_1750_config.h:
+D:/Program\ Files\ (x86)/Programy/Github/PID_LED_control/Components/Inc/bh_1750.h:
 ../Core/Inc/main.h:
 ../Core/Inc/i2c.h:
 ../Core/Inc/main.h:

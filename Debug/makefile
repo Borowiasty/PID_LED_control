@@ -61,8 +61,8 @@ all: main-build
 main-build: ProjektZaliczeniowy.elf secondary-outputs
 
 # Tool invocations
-ProjektZaliczeniowy.elf ProjektZaliczeniowy.map: $(OBJS) $(USER_OBJS) D:\Program\ Files\ (x86)\Programy\STM32CubeIDE_1.10.1\Projekty\ProjektZaliczeniowy\STM32F746ZGTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "ProjektZaliczeniowy.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m7 -T"D:\Program Files (x86)\Programy\STM32CubeIDE_1.10.1\Projekty\ProjektZaliczeniowy\STM32F746ZGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="ProjektZaliczeniowy.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv5-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+ProjektZaliczeniowy.elf ProjektZaliczeniowy.map: $(OBJS) $(USER_OBJS) D:\Program\ Files\ (x86)\Programy\Github\PID_LED_control\STM32F746ZGTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "ProjektZaliczeniowy.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m7 -T"D:\Program Files (x86)\Programy\Github\PID_LED_control\STM32F746ZGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="ProjektZaliczeniowy.map" -Wl,--gc-sections -static -L"C:\Users\krza3\STM32Cube\Repository\Packs\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC" --specs=nano.specs -mfpu=fpv5-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
