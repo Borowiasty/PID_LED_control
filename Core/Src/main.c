@@ -49,7 +49,8 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-
+char msg[50];
+char znak[32];
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -62,7 +63,7 @@ void SystemClock_Config(void);
 /* USER CODE BEGIN 0 */
 float light=0;//y
 float error=0;//e
-float reference =0;//yr
+float reference = 200;//yr
 float duty=0;//u
 arm_pid_instance_f32 PID;//pid
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
@@ -80,9 +81,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 			if(duty<0)
 				duty=0;
 			//wyslanie wiadomosc
-		    char msg[32]={ 0, };
-		    int msg_len = sprintf(msg, "y=%d,d=%d \r\n", (int)light,(int)duty);
-		    HAL_UART_Transmit(&huart3, (uint8_t*)msg, msg_len, 1000);
+
 
 			__HAL_TIM_SET_COMPARE(&htim4,TIM_CHANNEL_1,duty);//ustawienie wypelnienia sygnalu PWM
 
@@ -128,13 +127,15 @@ int main(void)
   BH1750_Init(&hbh1750_1);//czujnik swiatla
   //inicjacja PID
   PID.Kp=10;
-  PID.Ki=0;
+  PID.Ki=2;
   PID.Kd=1;
   arm_pid_init_f32(&PID, 1);//1-reset state, 0-no change in state
 
   HAL_TIM_Base_Start_IT(&htim3);//probkowanie
   HAL_TIM_Base_Start_IT(&htim4);//pwm
   HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_1);
+
+  HAL_UART_Receive_IT(&huart3, &znak, 4);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -198,7 +199,48 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+{
+      if(GPIO_Pin==USER_Btn_Pin)
+      {
+    	  int len =  sprintf(msg, "light =  %d lux, error = %d lux, reference = %d lux, duty = %d %%", (int)light, (int)error, (int)reference, (int)(duty)/10);
+          HAL_UART_Transmit(&huart3,msg,len,10);
+      }
 
+}
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+{
+	 if(huart->Instance == USART3)
+	    {
+	        int pwmRed = 0;
+	        int pwmGreen=0;
+	        int pwmblue=0;
+	        if(znak[0] == 'G')
+	        {
+	            if(znak[1] == '1')
+	            {
+	                char bufor = znak[1];
+	                int zmienna = (int)(bufor) - 48;
+	                pwmRed = zmienna;
+	            }
+	            else if(znak[1] == '0')
+	            {
+	                char bufor = znak[2];
+	                int zmienna = (int)(bufor) - 48;
+	                pwmRed= zmienna * 10;
+	                bufor = znak[3];
+	                zmienna = (int)(bufor) - 48;
+	                pwmRed = pwmRed + zmienna;
+	                if(pwmRed == 32)
+	                {
+	                    zmienna = 0;
+	                }
+	            }
+	        }
+	        __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2, pwmRed);
+	        HAL_UART_Receive_IT(&huart3, &znak, 4);
+	    }
+}
 /* USER CODE END 4 */
 
 /**
