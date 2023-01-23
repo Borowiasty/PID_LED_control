@@ -50,7 +50,7 @@
 
 /* USER CODE BEGIN PV */
 char msg[50];
-char znak[32];
+char Rx_Data[4];
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -80,13 +80,16 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 				duty=1000;
 			if(duty<0)
 				duty=0;
-			//wyslanie wiadomosc
-
-
 			__HAL_TIM_SET_COMPARE(&htim4,TIM_CHANNEL_1,duty);//ustawienie wypelnienia sygnalu PWM
-
 	  }
 }
+void HAL_UART_RxCpltCallback (UART_HandleTypeDef * huart){
+	if (huart == &huart3)
+	  {
+		reference=atol(Rx_Data);
+	  }
+	HAL_UART_Receive_IT(&huart3, Rx_Data ,4);
+	}
 /* USER CODE END 0 */
 
 /**
@@ -126,16 +129,16 @@ int main(void)
   /* USER CODE BEGIN 2 */
   BH1750_Init(&hbh1750_1);//czujnik swiatla
   //inicjacja PID
-  PID.Kp=10;
-  PID.Ki=2;
-  PID.Kd=1;
+  PID.Kp=5;
+  PID.Ki=5;
+  PID.Kd=5;
   arm_pid_init_f32(&PID, 1);//1-reset state, 0-no change in state
 
   HAL_TIM_Base_Start_IT(&htim3);//probkowanie
   HAL_TIM_Base_Start_IT(&htim4);//pwm
   HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_1);
 
-  HAL_UART_Receive_IT(&huart3, &znak, 4);
+  HAL_UART_Receive_IT(&huart3, Rx_Data ,4);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -207,39 +210,6 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
           HAL_UART_Transmit(&huart3,msg,len,10);
       }
 
-}
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
-{
-	 if(huart->Instance == USART3)
-	    {
-	        int pwmRed = 0;
-	        int pwmGreen=0;
-	        int pwmblue=0;
-	        if(znak[0] == 'G')
-	        {
-	            if(znak[1] == '1')
-	            {
-	                char bufor = znak[1];
-	                int zmienna = (int)(bufor) - 48;
-	                pwmRed = zmienna;
-	            }
-	            else if(znak[1] == '0')
-	            {
-	                char bufor = znak[2];
-	                int zmienna = (int)(bufor) - 48;
-	                pwmRed= zmienna * 10;
-	                bufor = znak[3];
-	                zmienna = (int)(bufor) - 48;
-	                pwmRed = pwmRed + zmienna;
-	                if(pwmRed == 32)
-	                {
-	                    zmienna = 0;
-	                }
-	            }
-	        }
-	        __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2, pwmRed);
-	        HAL_UART_Receive_IT(&huart3, &znak, 4);
-	    }
 }
 /* USER CODE END 4 */
 
